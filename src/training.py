@@ -1,69 +1,26 @@
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.tree import DecisionTreeClassifier, ExtraTreeClassifier, export_text, plot_tree
+from functions import BasicModel
 from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
-from sklearn.gaussian_process import GaussianProcessClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics.pairwise import sigmoid_kernel
-from sklearn.model_selection import KFold,train_test_split, GridSearchCV, cross_val_score
-from sklearn.pipeline import Pipeline
-from sklearn.compose import ColumnTransformer, make_column_selector
-from sklearn.preprocessing import MinMaxScaler, StandardScaler, OneHotEncoder, LabelEncoder
-from sklearn.impute import SimpleImputer
-from sklearn.tree import _tree
-import numpy as np
-from matplotlib import pyplot as plt
+import pandas as pd
+import os
+from sklearn.model_selection import train_test_split
+from joblib import dump
+
+curr_path = os.getcwd().replace('''\\''' ,"/")
+dataset = pd.read_csv(curr_path +  "/dataset/iris.csv")
+X = dataset.drop('species', axis=1).values
+y = dataset['species'].values
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
 
 
-class BasicModel:
-    '''
-    Class for creating a base model
+# model = BasicModel(dataset, model=None, max_iter = 100)
 
-    Input Params:
-        Pandas df
-        String indicating model
-        Params dictionary to be unpacked
-    '''
+# model.fit(X_train, y_train)
+# # y_pred = model.predict(X_test)
+# # print(model.scoring(X_test, y_pred))
 
-    def __init__(self, df, model='rf', **params):
-        self.df = df
-        self.params = params
-        if model == 'dt':
-            self.model = DecisionTreeClassifier(**self.params)
-        elif model == 'svc':
-            self.model = SVC(**self.params)
-        elif model == 'et':
-            self.model = ExtraTreeClassifier(**self.params)
-        elif model == 'gp':
-            self.model = GaussianProcessClassifier(**self.params)
-        elif model == 'rf':
-            self.model = RandomForestClassifier(**self.params)
-        elif model == 'knn':
-            self.model = KNeighborsClassifier(**self.params)
-        elif model == 'lr':
-            self.model = LogisticRegression(**self.params)  
+model = LogisticRegression()
 
+model.fit(X_train, y_train)
 
-    def fit(self, X, y):
-        '''
-        Fit function to fit model to Training Set
-        '''
-
-        pipelines = transformation_pipeline(self.model)
-
-        self.trained_model = pipelines.fit(X, y)
-    
-    def predict(self, X):
-        '''
-        Predict function to predict the Response/Dependent variable based on the Regressor/Explanatory/Independent/Manipulated/Predictor imputted.
-
-        Input Params:
-            X_test attribute of class instantiated
-        
-        Return Value:
-            Predicted values
-        '''
-
-        predictions = self.trained_model.predict(X)
-
-        return predictions
+dump(model, 'trained_model/model.joblib')

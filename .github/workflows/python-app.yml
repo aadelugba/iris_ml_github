@@ -10,9 +10,12 @@ on:
     branches: [ main ]
 
 jobs:
-  train:
+
+  train_ml_model:
 
     runs-on: ubuntu-latest
+
+    name: Train ML Model - Iris Datasets
 
     steps:
     - uses: actions/checkout@v2
@@ -36,20 +39,29 @@ jobs:
         # python app.py
         python src/test.py
 
-  test:
+
+  test_ml_model:
 
     runs-on: ubuntu-latest
 
+    name: Test ML Model Using pytest
+
+    # needs shows a dependence on another job - in this case test_ml_model depends on train_ml_model
+    needs: train_ml_model
+
     steps:
+
     - uses: actions/checkout@v2
     - name: Set up Python 3.10
       uses: actions/setup-python@v2
       with:
         python-version: "3.10"
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+
     - name: Lint with flake8
       run: |
         pip install flake8
@@ -57,6 +69,41 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Run Training Job
+
+    - name: Run Test Job
       run: |
-        python src/test.py
+        pip install pytest
+        pytest
+
+
+  containerise_model:
+
+    runs-on: ubuntu-latest
+
+    name: Dockerise ML Model
+
+    needs: test_ml_model
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build Docker Image
+      run: |
+        docker build -t app .
+
+    - name: Login to DockerHub Registry
+      run: |
+        # docker login -u aadelugba -p dckr_pat_Bu_peuU-LjGzJAhW7S46CncsBSs
+        # OR save above username and password as variables in github to avoid exposing them
+        # docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_SECRET }}
+        # OR get them from the echo command (best practice as it doesn't show logs of secrets)
+        echo ${{ secrets.DOCKER_SECRET }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+   
+    - name: Tag Docker Image
+      run: |
+        # tag with name of dockerhub user name (aadelugba) and repo name (iris_ml_github_actions) - this is where we push into
+        docker tag app aadelugba/iris_ml_github_actions
+
+    - name: Push Image to Docker Repository
+      run: |
+        docker push aadelugba/iris_ml_github_actions

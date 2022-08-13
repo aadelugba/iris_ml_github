@@ -23,4 +23,7 @@ model = LogisticRegression()
 
 model.fit(X_train, y_train)
 
-dump(model, 'trained_model/model.joblib')
+# model path - then write to it
+model_folder = 'trained_model/'
+os.makedirs(os.path.dirname(model_folder), exist_ok=True)
+dump(model, model_folder + 'model.joblib')

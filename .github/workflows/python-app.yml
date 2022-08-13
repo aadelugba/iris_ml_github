@@ -43,6 +43,12 @@ jobs:
         # python app.py
         python src/training.py
 
+    - name: Upload Model pickeled file
+      uses: actions/upload-artifact@v3
+      with:
+        name: Pickled model
+        path: .trained_model/
+
 
   test_ml_model:
 

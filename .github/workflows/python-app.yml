@@ -47,7 +47,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: Pickled model
-        path: .trained_model/
+        path: trained_model/model.joblib
 
 
   test_ml_model:

@@ -1,11 +1,6 @@
 pipeline{
 
-    agent{
-      docker { // Add Python Image to Agent
-        image 'python:3'
-        label 'my-build-agent'
-      }        
-    }
+    agent none
 
     // triggers{ // Pipeline triggered on build // https://www.jenkins.io/doc/book/pipeline/syntax/#triggers
     //     pollSCM('')
@@ -19,7 +14,11 @@ pipeline{
     stages{
 
         stage("Install Requirements"){
-
+            agent {
+                docker {
+                    image 'python:3-alpine' 
+                }
+            }
             steps{
                 // Install Python Dependencies
                 echo 'Installing Python Dependencies and Requirements ...'

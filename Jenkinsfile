@@ -24,15 +24,15 @@ pipeline{
 
         }
 
-        stage("Build"){
+        // stage("Build"){
 
-            steps{
-                // Build ML Model
-                echo 'Building ML Model ...'
-                sh 'python src/training.py'                
-            }
+        //     steps{
+        //         // Build ML Model
+        //         echo 'Building ML Model ...'
+        //         sh 'python src/training.py'                
+        //     }
 
-        }
+        // }
 
         stage("Test"){
 

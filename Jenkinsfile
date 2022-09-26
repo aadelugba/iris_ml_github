@@ -1,6 +1,11 @@
 pipeline{
 
-    agent any
+    agent{
+      docker { // Add Python Image to Agent
+        image 'python:3'
+        label 'my-build-agent'
+      }        
+    }
 
     triggers{ // Pipeline triggered on build // https://www.jenkins.io/doc/book/pipeline/syntax/#triggers
         pollSCM('')
@@ -12,14 +17,6 @@ pipeline{
     }
 
     stages{
-
-        stage("Get Python"){
-
-            step{
-                // Use Python version --- https://www.youtube.com/watch?v=OB7fGZ32n-s&t=35s
-                sh 'python3 --version'
-            }
-        }
 
         stage("Install Requirements"){
 

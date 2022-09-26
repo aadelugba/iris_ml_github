@@ -13,26 +13,34 @@ pipeline{
 
     stages{
 
+        stage("Get Python"){
+
+            step{
+                // Use Python version --- https://www.youtube.com/watch?v=OB7fGZ32n-s&t=35s
+                sh 'python3 --version'
+            }
+        }
+
         stage("Install Requirements"){
 
             steps{
                 // Install Python Dependencies
                 echo 'Installing Python Dependencies and Requirements ...'
-                sh 'python -m pip install --upgrade pip'
+                sh 'python3 -m pip install --upgrade pip'
                 sh 'pip install -r requirements.txt'
             }
 
         }
 
-        // stage("Build"){
+        stage("Build"){
 
-        //     steps{
-        //         // Build ML Model
-        //         echo 'Building ML Model ...'
-        //         sh 'python src/training.py'                
-        //     }
+            steps{
+                // Build ML Model
+                echo 'Building ML Model ...'
+                sh 'python3 src/training.py'                
+            }
 
-        // }
+        }
 
         stage("Test"){
 

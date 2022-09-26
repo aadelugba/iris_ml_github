@@ -7,9 +7,9 @@ pipeline{
       }        
     }
 
-    triggers{ // Pipeline triggered on build // https://www.jenkins.io/doc/book/pipeline/syntax/#triggers
-        pollSCM('')
-    }
+    // triggers{ // Pipeline triggered on build // https://www.jenkins.io/doc/book/pipeline/syntax/#triggers
+    //     pollSCM('')
+    // }
 
     environment{ // Create environments
         DOCKERHUB_CREDENTIALS=credentials('dockerhub') //

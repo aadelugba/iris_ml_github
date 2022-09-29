@@ -19,6 +19,7 @@ pipeline{
 
             steps{
                 // Install Python Dependencies
+                // Using venv: https://stackoverflow.com/questions/40836570/jenkinsfile-and-python-virtualenv
                 echo 'Installing Python Dependencies and Requirements ...'
                 // sh 'python3 -m pip install --upgrade pip'
                 // sh 'pip install -r requirements.txt'
@@ -45,11 +46,18 @@ pipeline{
         stage("Test"){      
             steps{
                 // Run Python Tests
+                // https://stackoverflow.com/questions/63816115/jenkins-line-5-pytest-command-not-found
                 echo 'Running Python Tests ...'
                 sh '''
                     . .venv/bin/activate
                     python3 -m pytest
                 '''               
+            }
+
+            post{
+                always{
+                    junit '**/reports/junit/*.xml'
+                }
             }
 
         }

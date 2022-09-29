@@ -1,6 +1,8 @@
 pipeline{
-
-    agent none
+    
+    agent {
+        docker {image 'python:latest'}
+        }
 
     // triggers{ // Pipeline triggered on build // https://www.jenkins.io/doc/book/pipeline/syntax/#triggers
     //     pollSCM('')
@@ -14,11 +16,6 @@ pipeline{
     stages{
 
         stage("Install Requirements"){
-            agent {
-                docker {
-                    image 'python:latest' 
-                }
-            }
 
             steps{
                 // Install Python Dependencies
@@ -45,13 +42,7 @@ pipeline{
 
         // }
 
-        stage("Test"){
-            agent {
-                docker {
-                    image 'python:latest' 
-                }
-            }            
-
+        stage("Test"){      
             steps{
                 // Run Python Tests
                 echo 'Running Python Tests ...'

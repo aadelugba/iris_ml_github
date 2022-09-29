@@ -23,6 +23,8 @@ pipeline{
                 // sh 'python3 -m pip install --upgrade pip'
                 // sh 'pip install -r requirements.txt'
                 sh '''
+                    python3 -m venv .venv
+                    . .venv/bin/activate
                     python3 -m pip install --upgrade pip
                     pip install -r requirements.txt
                 '''
@@ -44,7 +46,10 @@ pipeline{
             steps{
                 // Run Python Tests
                 echo 'Running Python Tests ...'
-                sh 'python3 -m pytest'                
+                sh '''
+                    . .venv/bin/activate
+                    python3 -m pytest
+                '''               
             }
 
         }

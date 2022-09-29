@@ -46,7 +46,7 @@ pipeline{
             steps{
                 // Run Python Tests
                 echo 'Running Python Tests ...'
-                sh 'pytest'                
+                sh 'python3 -m pytest'                
             }
 
         }
